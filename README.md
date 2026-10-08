@@ -1,7 +1,7 @@
 # OpenHiggsfield AI — Open-Source Alternative to Higgsfield AI
 
 > **The free, open-source alternative to Higgsfield AI.** Generate images and
-> videos with 38 models from one prompt bar — no closed ecosystem, no studio
+> videos with 44 models from one prompt bar — no closed ecosystem, no studio
 > subscription.
 
 ## 🌐 Try it Online — No Install Required
@@ -18,7 +18,7 @@ platform key (`id:secret`) to start generating. The studio itself is free.
 - **Free & open-source** — no studio subscription, no vendor lock-in
 - **Self-hosted** — clone it, run it, change it
 - **Your key** — generate with your own platform key
-- **38 models** — 8 image, 30 video, one catalog, one composer
+- **44 models** — 11 image, 33 video, one catalog, one composer
 
 ---
 
@@ -32,7 +32,15 @@ Next.js 16 App Router on Vercel · React 19 · plain CSS · Zustand · pnpm
 
 - **One composer for Image and Video.** A single prompt bar drives both; the
   model you pick decides image or video. `⌘/Ctrl + Enter` submits.
-- **38 models in the catalog** — 8 image, 30 video: Soul 2, Soul Cinema, Seedance
+- **Ordered inputs.** Frames, references and clips attach above the prompt and
+  carry the number the model will know them by — drag a tile to change its
+  place, or lift it with its grip and walk it with the arrow keys.
+- **Two ways to reach the platform.** By default the server calls it and the
+  key stays in an httpOnly cookie. Where the server cannot reach out — a
+  sandbox preview, a locked-down host — turn on *Send generations from this
+  browser* in the key dialog and the page calls the platform itself (the key is
+  then in this browser's storage, and uploads still need the server).
+- **44 models in the catalog** — 11 image, 33 video: Soul 2, Soul Standard, Marketing Studio Image, Genjutsu, Seedance
   2.5 (Edit / Extend), Seedance 2.0 (Fast / Mini), Kling 3 (Turbo / Std / Pro / 4K / Motion), Wan, Flux,
   Ideogram, Recraft, LTX, MiniMax, PixVerse, Grok, Qwen and more. Searchable
   picker.

@@ -9,8 +9,10 @@
     "brand": "node scripts/build-brand-assets.mjs"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.127.0",
     "@tanstack/react-virtual": "^3.14.10",
     "@vercel/blob": "^2.8.0",
+    "marked": "^18.0.13",
     "next": "^16.0.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",

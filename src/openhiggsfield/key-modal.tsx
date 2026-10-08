@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 
 import { clearPlatformCredentials, savePlatformCredentials } from "@/generation/actions";
+import { parseCredentialInput } from "@/generation/credentials";
+import { clearDirectKey, directEnabled, saveDirectKey, setDirectEnabled } from "@/generation/direct";
 
 import { CloseIcon } from "./icons";
 
@@ -20,10 +22,12 @@ export function KeyModal({
   const ref = useRef<HTMLDialogElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const [apiKey, setApiKey] = useState("");
+  const [direct, setDirect] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    setDirect(directEnabled());
     ref.current?.showModal();
     panelRef.current?.focus();
   }, []);
@@ -33,7 +37,16 @@ export function KeyModal({
     setBusy(true);
     setError(null);
     try {
-      await savePlatformCredentials({ api_key: apiKey });
+      if (direct) {
+        /* The same id:secret rule the server path enforces, enforced here
+           before the key is written into this browser's storage. */
+        parseCredentialInput({ api_key: apiKey });
+        saveDirectKey(apiKey);
+        setDirectEnabled(true);
+      } else {
+        await savePlatformCredentials({ api_key: apiKey });
+        setDirectEnabled(false);
+      }
       onSaved();
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Could not save the key");
@@ -46,6 +59,9 @@ export function KeyModal({
     setBusy(true);
     setError(null);
     try {
+      /* Either store may hold the key — the visitor may have arrived from the
+         other mode — so removing takes both. */
+      clearDirectKey();
       await clearPlatformCredentials();
       setApiKey("");
       onCleared();
@@ -72,9 +88,11 @@ export function KeyModal({
               API key
             </div>
             <p className="ohf-keys-copy">
-              {configured
-                ? "A key is saved in this browser. Enter a new id:secret pair to replace it."
-                : "Paste your platform key as id:secret. It stays in an httpOnly cookie and is sent as Authorization: Key id:secret."}
+              {direct
+                ? "Direct mode: the key is kept in this browser's storage, not the server's. The page calls the platform itself — use it where the server cannot reach out."
+                : configured
+                  ? "A key is saved in this browser. Enter a new id:secret pair to replace it."
+                  : "Paste your platform key as id:secret. It stays in an httpOnly cookie and is sent as Authorization: Key id:secret."}
             </p>
           </div>
           <button type="button" className="ohf-icon-btn" aria-label="Close" onClick={onClose}>
@@ -94,6 +112,21 @@ export function KeyModal({
               value={apiKey}
               onChange={(event) => setApiKey(event.target.value)}
             />
+          </label>
+
+          <label className="ohf-keys-mode">
+            <input
+              type="checkbox"
+              checked={direct}
+              onChange={(event) => setDirect(event.target.checked)}
+            />
+            <span>
+              Send generations from this browser
+              <span className="ohf-keys-mode-note">
+                The key is readable by scripts on the page, and media uploads still
+                need a server with a Blob store.
+              </span>
+            </span>
           </label>
 
           {error && (

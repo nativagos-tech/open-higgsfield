@@ -58,6 +58,7 @@ export const SAMPLES: Record<Surface, string[]> = {
     "Underwater shot of a swimmer breaking the surface, bubbles, sunlight refracting",
     "Static wide of a train crossing a viaduct at dusk, lit windows, long lens compression",
     "Slow tilt down a glass tower facade to a busy crosswalk, overcast city light",
+    "A lone survivor in a cracked gas mask walks slowly toward the camera through a ruined avenue, coat heavy with grey ash, collapsed towers behind, embers drifting",
   ],
 };
 
@@ -88,6 +89,9 @@ const SETTING_LABELS: Record<string, string> = {
   multiShots: "Multi-shot",
   keepOriginalSound: "Keep original sound",
   characterOrientation: "Orientation",
+  quality: "Quality",
+  renderingSpeed: "Speed",
+  imageWeight: "Image weight",
 };
 
 /* A pill carries one word; "Generate audio" is a panel label, not a control on

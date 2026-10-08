@@ -122,6 +122,20 @@ export function RetryIcon({ size = 13 }: IconProps) {
   );
 }
 
+/* The one mark that says a thing can be picked up and put down elsewhere. */
+export function GripIcon({ size = 12 }: IconProps) {
+  return (
+    <svg {...base(size)}>
+      <circle cx="6" cy="4.2" r="1.15" fill="currentColor" stroke="none" />
+      <circle cx="10" cy="4.2" r="1.15" fill="currentColor" stroke="none" />
+      <circle cx="6" cy="8" r="1.15" fill="currentColor" stroke="none" />
+      <circle cx="10" cy="8" r="1.15" fill="currentColor" stroke="none" />
+      <circle cx="6" cy="11.8" r="1.15" fill="currentColor" stroke="none" />
+      <circle cx="10" cy="11.8" r="1.15" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+
 export function WarningIcon({ size = 14 }: IconProps) {
   return (
     <svg {...base(size)}>
@@ -304,6 +318,23 @@ export function WaveBadgeIcon({ size = 12 }: IconProps) {
   return (
     <svg {...base(size)}>
       <path d="M2.75 6.6v2.8M6.25 4.4v7.2M9.75 6v4M13.25 7v2" />
+    </svg>
+  );
+}
+
+export function BookIcon({ size = 15 }: IconProps) {
+  return (
+    <svg {...base(size)}>
+      <path d="M2.5 3.2h4.2c.8 0 1.3.5 1.3 1.3v8.3c0-.7-.6-1.1-1.3-1.1H2.5zM13.5 3.2H9.3c-.8 0-1.3.5-1.3 1.3v8.3c0-.7.6-1.1 1.3-1.1h4.2z" />
+    </svg>
+  );
+}
+
+export function SparkIcon({ size = 15 }: IconProps) {
+  return (
+    <svg {...base(size)}>
+      <path d="M8 2.2c.5 2.9 1.9 4.3 5.8 5.8-3.9 1.5-5.3 2.9-5.8 5.8-.5-2.9-1.9-4.3-5.8-5.8C6.1 6.5 7.5 5.1 8 2.2z" />
+      <path d="M12.6 1.6c.2 1.1.7 1.6 1.9 2.1-1.2.5-1.7 1-1.9 2.1-.2-1.1-.7-1.6-1.9-2.1 1.2-.5 1.7-1 1.9-2.1z" />
     </svg>
   );
 }

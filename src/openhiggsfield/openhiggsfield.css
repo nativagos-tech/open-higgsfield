@@ -516,6 +516,53 @@
   animation: ohf-pulse 2.4s ease-in-out infinite;
 }
 
+/* Guides: a second pill in the key bar, dropping a two-link card. */
+.ohf-docs {
+  position: relative;
+}
+.ohf-docs-btn[aria-expanded="true"] {
+  color: var(--tx);
+  background: rgba(255, 255, 255, 0.035);
+}
+.ohf-docs-pop {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 248px;
+  padding: 6px;
+  background: var(--s2);
+  border: 1px solid var(--line-2);
+  border-radius: 14px;
+  box-shadow: var(--shadow-3), var(--glint);
+  animation: ohf-pop 0.22s var(--ease);
+  transform-origin: top right;
+}
+.ohf-docs-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 9px 11px;
+  border-radius: 9px;
+  text-decoration: none;
+  transition: background 0.15s ease;
+}
+.ohf-docs-item:hover {
+  background: var(--s3);
+}
+.ohf-docs-item-title {
+  font-size: 13px;
+  font-weight: 550;
+  color: var(--tx);
+}
+.ohf-docs-item-hint {
+  font-size: 11.5px;
+  color: var(--tx3);
+}
+
 /* ---------- main ---------- */
 
 .ohf-main {
@@ -1313,6 +1360,9 @@
   box-shadow:
     inset 0 0 0 1px rgba(255, 255, 255, 0.1),
     var(--shadow-1);
+  transition:
+    transform 0.16s var(--ease),
+    box-shadow 0.16s ease;
 }
 .ohf-strip-thumb {
   display: block;
@@ -1339,6 +1389,17 @@
   text-align: center;
   color: #edf2f0;
   background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.74));
+}
+.ohf-strip-num {
+  margin-left: 3px;
+  padding: 0 4px;
+  border-radius: 4px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0;
+  font-variant-numeric: tabular-nums;
+  color: var(--accent-ink);
+  background: var(--accent);
 }
 .ohf-strip-remove {
   position: absolute;
@@ -1376,6 +1437,85 @@
 }
 .ohf-strip-remove:active {
   transform: scale(0.96);
+}
+
+/* ---------- reordering the strip ---------- */
+
+/* A tile is draggable exactly when its role is ordered and holds more than one
+   — the same condition its number speaks to. The whole tile is the handle, the
+   way the picture is what the hand reaches for. `touch-action` is what lets a
+   finger drag a tile instead of scrolling the dock away with it, so it is
+   claimed only here, where the gesture is real. */
+.ohf-strip-item[data-reorder] {
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+.ohf-strip-item[data-reorder] .ohf-strip-thumb {
+  -webkit-user-drag: none;
+}
+.ohf-strip-item[data-lifted] {
+  cursor: grabbing;
+  z-index: 2;
+}
+/* The picture lifts off the strip; the controls on its corners stay where the
+   pointer left them, so the tile in the hand is unmistakable. */
+.ohf-strip-item[data-lifted] .ohf-strip-tile {
+  transform: scale(1.08);
+  box-shadow:
+    inset 0 0 0 1px var(--accent-32),
+    var(--shadow-2);
+}
+/* The grip is that handle in visible form: the pointer drags from it, and the
+   keyboard lifts the tile with it. Like the gallery's card actions it comes out
+   of hiding on hover — and on its own focus, so tabbing still reaches it. */
+.ohf-strip-grip {
+  position: absolute;
+  top: -6px;
+  left: -6px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--tx3);
+  background: var(--s4);
+  box-shadow:
+    0 1px 4px rgba(0, 0, 0, 0.55),
+    inset 0 0 0 1px var(--line-2);
+  opacity: 0;
+  cursor: grab;
+  touch-action: none;
+  transition:
+    opacity 0.15s ease,
+    color 0.15s ease,
+    background 0.15s ease,
+    transform 0.15s var(--ease);
+}
+.ohf-strip-item:hover .ohf-strip-grip,
+.ohf-strip-item:has(.ohf-strip-grip:focus-visible) .ohf-strip-grip,
+.ohf-strip-item[data-lifted] .ohf-strip-grip {
+  opacity: 1;
+}
+.ohf-strip-grip:hover {
+  color: var(--tx);
+  background: var(--s3);
+}
+.ohf-strip-grip:active {
+  cursor: grabbing;
+  transform: scale(0.96);
+}
+/* No hover to reveal it with, so the handle simply stands — and larger, because
+   a thumb is not a cursor. */
+@media (hover: none) {
+  .ohf-strip-grip {
+    opacity: 1;
+    width: 26px;
+    height: 26px;
+  }
 }
 
 /* The dock floats over the runs the way the top bar does. In flow it reserved
@@ -2496,7 +2636,23 @@
   gap: 2px;
 }
 .ohf-picker-group {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
   padding: 9px 10px 5px;
+}
+.ohf-picker-guide {
+  color: var(--tx3);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  text-decoration: none;
+  transition: color 160ms var(--ease);
+}
+.ohf-picker-guide:hover {
+  color: var(--accent);
 }
 .ohf-model-row {
   display: flex;
@@ -2605,6 +2761,199 @@
 .ohf-picker-empty .ohf-btn-solid {
   margin-top: 3px;
   height: 30px;
+}
+
+/* ---------- prompt assistant ---------- */
+
+/* The assistant is the rules of PROMPTS.md made into a form: fields per block
+   the target model listens to, its own tips alongside, the assembled prompt
+   below. It opens off the spark at the end of the prompt line. */
+.ohf-assist {
+  margin-left: 2px;
+}
+.ohf-assist[aria-expanded="true"] {
+  color: var(--accent);
+  border-color: var(--accent-32);
+}
+.ohf-popover--assistant {
+  width: min(560px, 100%);
+  max-height: min(78vh, 720px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.ohf-assistant-model {
+  margin-left: auto;
+  margin-right: 6px;
+  font-size: 11.5px;
+  color: var(--tx3);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ohf-assistant-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  gap: 0;
+  min-height: 0;
+  overflow-y: auto;
+  border-bottom: 1px solid var(--line);
+}
+.ohf-assistant-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 12px 14px;
+  border-right: 1px solid var(--line);
+}
+.ohf-assistant-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.ohf-assistant-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--tx3);
+}
+.ohf-assistant-req {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+.ohf-assistant-input {
+  width: 100%;
+  resize: vertical;
+  min-height: 34px;
+  padding: 7px 9px;
+  font: inherit;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--tx);
+  background: var(--s1);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+.ohf-assistant-input::placeholder {
+  color: var(--tx4);
+}
+.ohf-assistant-input:focus-visible {
+  border-color: var(--accent-32);
+}
+.ohf-assistant-input:disabled {
+  opacity: 0.5;
+}
+.ohf-assistant-input--brief {
+  min-height: 140px;
+}
+.ohf-assistant-hint {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--tx3);
+}
+.ohf-assistant-hint code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 11px;
+  color: var(--tx2);
+}
+.ohf-assistant-side {
+  padding: 6px 12px 14px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--tx2);
+}
+.ohf-assistant-side .ohf-pop-head {
+  padding-left: 0;
+  padding-right: 0;
+}
+.ohf-assistant-tips {
+  margin: 0 0 6px;
+  padding-left: 16px;
+}
+.ohf-assistant-tips li {
+  margin: 3px 0;
+}
+.ohf-assistant-tips li::marker {
+  color: var(--tx4);
+}
+.ohf-assistant-tip--strong {
+  color: var(--accent);
+}
+.ohf-assistant-example {
+  margin: 0 0 8px;
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--tx3);
+  font-style: italic;
+}
+.ohf-assistant-preview {
+  padding: 8px 12px 10px;
+  border-bottom: 1px solid var(--line);
+  background: var(--s1);
+}
+.ohf-assistant-preview-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+.ohf-assistant-preview .ohf-pop-head {
+  padding: 0;
+}
+.ohf-assistant-count {
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  color: var(--tx4);
+}
+.ohf-assistant-count[data-state="ok"] {
+  color: var(--tx3);
+}
+.ohf-assistant-count[data-state="long"],
+.ohf-assistant-count[data-state="short"] {
+  color: var(--danger);
+}
+.ohf-assistant-preview-text {
+  margin: 4px 0 0;
+  max-height: 120px;
+  overflow-y: auto;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--tx);
+}
+.ohf-assistant-empty {
+  color: var(--tx4);
+}
+.ohf-assistant-note {
+  margin: 6px 0 0;
+  font-size: 11.5px;
+  color: var(--tx3);
+}
+.ohf-assistant-error {
+  margin: 6px 0 0;
+  font-size: 12px;
+  color: var(--danger);
+}
+.ohf-assistant-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+@media (max-width: 640px) {
+  .ohf-assistant-body {
+    grid-template-columns: 1fr;
+  }
+  .ohf-assistant-form {
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
 }
 
 /* ---------- asset picker ---------- */
@@ -2964,6 +3313,31 @@
   flex-direction: column;
   gap: 12px;
   padding: 16px 18px 18px;
+}
+/* The mode's switch, sat under the key it changes the custody of. The box is
+   the browser's own: it already carries the platform's accent through
+   `accent-color`, and a drawn one would be a second checkbox idiom. */
+.ohf-keys-mode {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: var(--tx2);
+  cursor: pointer;
+}
+.ohf-keys-mode input {
+  margin: 2px 0 0;
+  width: 14px;
+  height: 14px;
+  flex: none;
+  cursor: pointer;
+}
+.ohf-keys-mode-note {
+  display: block;
+  margin-top: 2px;
+  font-size: 11.5px;
+  color: var(--tx4);
 }
 .ohf-keys-actions {
   display: flex;

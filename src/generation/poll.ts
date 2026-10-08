@@ -1,4 +1,5 @@
 import { getGenerationStatuses } from "./actions";
+import { directEnabled, getDirectStatuses } from "./direct";
 import type { GenerationStatus, StatusResult } from "./platform";
 
 /** Statuses the platform never moves off again. */
@@ -23,10 +24,11 @@ let polling = false;
 let misses = 0;
 
 /** Resolves when the platform reports a terminal status for this request.
-    Every request in flight is asked for together, in one server action per
-    interval: Next dispatches server actions one at a time per client, so a
-    poll per run would queue ahead of the next submit and the composer would
-    stall again — with the lock gone and the queue doing the same work. */
+    Every request in flight is asked for together — one server action per
+    interval, or one browser fan-out in direct mode: Next dispatches server
+    actions one at a time per client, so a poll per run would queue ahead of the
+    next submit and the composer would stall again — with the lock gone and the
+    queue doing the same work. */
 export function watchRequest(
   requestId: string,
   opts?: { deadline?: number },
@@ -71,7 +73,10 @@ async function round(): Promise<void> {
   timer = null;
   polling = true;
   try {
-    const results = await getGenerationStatuses({ requestIds: [...waiting.keys()] });
+    const requestIds = [...waiting.keys()];
+    const results = await (directEnabled()
+      ? getDirectStatuses(requestIds)
+      : getGenerationStatuses({ requestIds }));
     misses = 0;
     for (const result of results) deliver(result);
     sweep();
