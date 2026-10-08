@@ -58,6 +58,7 @@ export const SAMPLES: Record<Surface, string[]> = {
     "Underwater shot of a swimmer breaking the surface, bubbles, sunlight refracting",
     "Static wide of a train crossing a viaduct at dusk, lit windows, long lens compression",
     "Slow tilt down a glass tower facade to a busy crosswalk, overcast city light",
+    "A lone survivor in a cracked gas mask walks slowly toward the camera through a ruined avenue, coat heavy with grey ash, collapsed towers behind, embers drifting",
   ],
 };
 
