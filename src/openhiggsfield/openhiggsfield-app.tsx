@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { hasPlatformCredentials, submitGeneration } from "@/generation/actions";
 import { MissingCredentialsError } from "@/generation/credentials";
+import { directEnabled, directKey, submitDirect } from "@/generation/direct";
 import { MODELS, getModel } from "@/generation/catalog";
 import type { Surface } from "@/generation/catalog";
 import { assemblePlane } from "@/generation/plane";
@@ -221,6 +222,15 @@ export function OpenHiggsfieldApp({ fontClassName = "" }: { fontClassName?: stri
   }, [historyLoaded, history]);
 
   useEffect(() => {
+    /* Direct mode keeps its key in this browser instead of the server's
+       cookie, so the question "is a key configured" is asked of whichever
+       store the mode reads from. */
+    if (directEnabled()) {
+      const ready = directKey() !== null;
+      setKeyConfigured(ready);
+      if (!ready) setKeysOpen(true);
+      return;
+    }
     void hasPlatformCredentials().then((ready) => {
       setKeyConfigured(ready);
       if (!ready) setKeysOpen(true);
@@ -379,7 +389,7 @@ export function OpenHiggsfieldApp({ fontClassName = "" }: { fontClassName?: stri
 
     const runOne = async (slot: { skeletons: string[] }) => {
       try {
-        const queued = await submitGeneration(plane);
+        const queued = directEnabled() ? await submitDirect(plane) : await submitGeneration(plane);
         setHistory((prev) => {
           const next = [...runningRows(queued.requestId, slot.skeletons.length, draft), ...prev];
           void saveHistory(next);

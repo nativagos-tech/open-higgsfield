@@ -147,6 +147,43 @@ d'un futur générateur de prompts. Les deux sont servis dans l'app sous
 `/docs/models` et `/docs/prompts`. À mettre à jour à chaque ajout ou retrait de
 modèle.
 
+## Mode direct : générer depuis le navigateur (08/10/2026)
+
+Chemin par défaut : le serveur appelle la plateforme (server actions,
+`src/generation/actions.ts`) et la clé vit dans un cookie httpOnly. Ce chemin
+suppose un serveur qui *atteint* la plateforme — un `pnpm dev` local et un
+déploiement Vercel le font, un bac à sable sans sortie réseau ne le fait pas
+(`ECONNRESET` sur `platform.higgsfield.ai`, cf. le build qui ne joint pas
+Google Fonts non plus).
+
+Le **mode direct** est le second chemin, à cocher dans la boîte de dialogue de
+la clé (*« Send generations from this browser »*) :
+
+- La page appelle la plateforme elle-même (`src/generation/direct.ts`), avec la
+  même chaîne que le serveur : `parseSettings` → `toPlatform` →
+  `createPlatformClient`. Les octets envoyés sont identiques ; seul le porteur
+  change.
+- La clé est alors dans le **localStorage** du navigateur, lisible par tout
+  script de la page — d'où l'option explicite et la note dans la boîte. En
+  mode serveur, elle reste en cookie httpOnly et n'entre jamais dans le JS.
+- Les **uploads** (frames, références) passent toujours par le serveur et son
+  Blob store : le mode direct ne sert que le texte (text-to-image,
+  text-to-video) tant qu'il n'y a pas de Blob.
+- Si la plateforme refuse l'appel du navigateur (CORS), l'erreur le dit
+  franchement : « the browser call to … was blocked before it reached the
+  platform (CORS or network) ». Le garde-fou est branché sur le `fetch` du
+  client (`browserFetch`), pas sur un try/catch général — un `TypeError` venu
+  d'ailleurs garde son propre visage.
+- Adresse surchargée par déploiement :
+  `NEXT_PUBLIC_HF_API_BASE_URL` (défaut `https://platform.higgsfield.ai`).
+
+Vérifié hors navigateur sur le transport : URL, méthode, en-tête
+`Authorization: Key …`, corps identique au chemin serveur, fan-out des statuts,
+erreur de clé manquante, et la traduction du `TypeError` en message CORS.
+**Non vérifié** : un appel réel depuis un navigateur (le bac à sable ne joint
+pas la plateforme) — si la plateforme n'ouvre pas ses CORS à l'origine du
+studio, le mode direct échouera proprement et il faudra le chemin serveur.
+
 ## Réordonner le plateau (08/10/2026)
 
 L'ordre des vignettes est celui que la plateforme reçoit et celui que le prompt

@@ -35,6 +35,11 @@ Next.js 16 App Router on Vercel · React 19 · plain CSS · Zustand · pnpm
 - **Ordered inputs.** Frames, references and clips attach above the prompt and
   carry the number the model will know them by — drag a tile to change its
   place, or lift it with its grip and walk it with the arrow keys.
+- **Two ways to reach the platform.** By default the server calls it and the
+  key stays in an httpOnly cookie. Where the server cannot reach out — a
+  sandbox preview, a locked-down host — turn on *Send generations from this
+  browser* in the key dialog and the page calls the platform itself (the key is
+  then in this browser's storage, and uploads still need the server).
 - **44 models in the catalog** — 11 image, 33 video: Soul 2, Soul Standard, Marketing Studio Image, Genjutsu, Seedance
   2.5 (Edit / Extend), Seedance 2.0 (Fast / Mini), Kling 3 (Turbo / Std / Pro / 4K / Motion), Wan, Flux,
   Ideogram, Recraft, LTX, MiniMax, PixVerse, Grok, Qwen and more. Searchable

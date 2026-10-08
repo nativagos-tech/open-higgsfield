@@ -3314,6 +3314,31 @@
   gap: 12px;
   padding: 16px 18px 18px;
 }
+/* The mode's switch, sat under the key it changes the custody of. The box is
+   the browser's own: it already carries the platform's accent through
+   `accent-color`, and a drawn one would be a second checkbox idiom. */
+.ohf-keys-mode {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: var(--tx2);
+  cursor: pointer;
+}
+.ohf-keys-mode input {
+  margin: 2px 0 0;
+  width: 14px;
+  height: 14px;
+  flex: none;
+  cursor: pointer;
+}
+.ohf-keys-mode-note {
+  display: block;
+  margin-top: 2px;
+  font-size: 11.5px;
+  color: var(--tx4);
+}
 .ohf-keys-actions {
   display: flex;
   align-items: center;
