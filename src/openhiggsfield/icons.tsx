@@ -122,6 +122,20 @@ export function RetryIcon({ size = 13 }: IconProps) {
   );
 }
 
+/* The one mark that says a thing can be picked up and put down elsewhere. */
+export function GripIcon({ size = 12 }: IconProps) {
+  return (
+    <svg {...base(size)}>
+      <circle cx="6" cy="4.2" r="1.15" fill="currentColor" stroke="none" />
+      <circle cx="10" cy="4.2" r="1.15" fill="currentColor" stroke="none" />
+      <circle cx="6" cy="8" r="1.15" fill="currentColor" stroke="none" />
+      <circle cx="10" cy="8" r="1.15" fill="currentColor" stroke="none" />
+      <circle cx="6" cy="11.8" r="1.15" fill="currentColor" stroke="none" />
+      <circle cx="10" cy="11.8" r="1.15" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+
 export function WarningIcon({ size = 14 }: IconProps) {
   return (
     <svg {...base(size)}>

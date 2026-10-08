@@ -147,6 +147,41 @@ d'un futur générateur de prompts. Les deux sont servis dans l'app sous
 `/docs/models` et `/docs/prompts`. À mettre à jour à chaque ajout ou retrait de
 modèle.
 
+## Réordonner le plateau (08/10/2026)
+
+L'ordre des vignettes est celui que la plateforme reçoit et celui que le prompt
+doit citer (« the hiker from @Image1 », `PROMPTS.md` §3.6) : il se règle
+maintenant en déplaçant la vignette, au lieu de la retirer et de la rajouter.
+
+- **Souris, stylet, tactile** : on attrape la vignette et on la dépose où l'on
+  veut. L'ordre se réécrit *pendant* le glisser, pas au relâcher — le plateau
+  montre donc toujours ce que le prompt comptera. Rien ne bouge avant quelques
+  pixels parcourus (une pression qui ne voyage pas n'est pas un déplacement).
+- **Clavier** : la poignée (pastille à six points, en haut à gauche de la
+  vignette, visible au survol ou au focus) — Entrée soulève, les flèches
+  déplacent, Origine/Fin vont au bout du rôle, Entrée ou Échap repose.
+- **Un rôle à la fois** : seules les vignettes du même rôle s'échangent, parce
+  que la plateforme reçoit *un tableau par rôle* : une vignette REF ne peut pas
+  passer devant un START. Une vignette n'est déplaçable que si son rôle accepte
+  plusieurs entrées (`model.roles[role] > 1`) et en porte plus d'une — la
+  numérotation et la poignée apparaissent sous la même condition.
+- L'ordre est persisté avec le reste du plateau (zustand + localStorage), et
+  chaque déplacement est annoncé (`role="status"`) : l'ordre est tout l'objet du
+  geste et un lecteur d'écran ne peut pas le voir changer.
+
+Code : `moveMediaItem` (`src/generation/stores/media.ts`) applique l'ordre — un
+ordre *interne au rôle*, les autres rôles ne bougent pas ; `dropBefore`
+(`src/openhiggsfield/reorder.ts`) lit la géométrie du pointeur (ligne du haut
+dépassée, ligne du bas pas encore atteinte, milieu de la vignette comme ligne
+de partage dans la ligne courante). Le glisser écoute `window` et non la
+vignette : React réinsère le nœud à chaque déplacement, un écouteur posé sur le
+nœud perdrait le pointeur en cours de route. Pas de HTML5 drag-and-drop : il
+ignore le tactile et ne dit rien pendant le vol.
+
+Vérifié hors navigateur (jsdom + React) sur les deux gestes : seuil, dépôt,
+arrêt aux extrémités, poignée absente quand le rôle est unique. **À confirmer à
+la main** sur un vrai plateau — le tactile en particulier.
+
 ## État au 19/09/2026 (soir) et fils ouverts
 
 Fait : catalogue audité contre la console (44 modèles ; Marketing Studio,
@@ -162,8 +197,8 @@ github.com/Bizarbizar/open-higgsfield (`origin`), amont `wide-trace` en `upstrea
 - Soul Cinema, DoP, Flux 3 : absents de la console, jamais testés → tester une
   génération et retirer si 404.
 - Marketing Studio mode *enhanced* (presets via `GET /marketing-studio/image/presets`).
-- Réordonner les références par glisser-déposer dans le plateau (aujourd'hui :
-  retirer / rajouter pour changer l'ordre).
+- Réordonner les références dans le plateau : **fait le 08/10/2026** (section
+  « Réordonner le plateau »), à confirmer sur un vrai plateau tactile.
 - Modèles vidéo « non audités » (Hailuo 2.3, Wan, LTX, PixVerse, Grok Video,
   Happy Horse, Kling 2.6/O1/O3) : vérifier leurs réglages réels comme pour H3.
 - « Workflows & agents » de la console (Product shots, Graphic ads, Cinema

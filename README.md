@@ -32,6 +32,9 @@ Next.js 16 App Router on Vercel · React 19 · plain CSS · Zustand · pnpm
 
 - **One composer for Image and Video.** A single prompt bar drives both; the
   model you pick decides image or video. `⌘/Ctrl + Enter` submits.
+- **Ordered inputs.** Frames, references and clips attach above the prompt and
+  carry the number the model will know them by — drag a tile to change its
+  place, or lift it with its grip and walk it with the arrow keys.
 - **44 models in the catalog** — 11 image, 33 video: Soul 2, Soul Standard, Marketing Studio Image, Genjutsu, Seedance
   2.5 (Edit / Extend), Seedance 2.0 (Fast / Mini), Kling 3 (Turbo / Std / Pro / 4K / Motion), Wan, Flux,
   Ideogram, Recraft, LTX, MiniMax, PixVerse, Grok, Qwen and more. Searchable

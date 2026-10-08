@@ -1360,6 +1360,9 @@
   box-shadow:
     inset 0 0 0 1px rgba(255, 255, 255, 0.1),
     var(--shadow-1);
+  transition:
+    transform 0.16s var(--ease),
+    box-shadow 0.16s ease;
 }
 .ohf-strip-thumb {
   display: block;
@@ -1434,6 +1437,85 @@
 }
 .ohf-strip-remove:active {
   transform: scale(0.96);
+}
+
+/* ---------- reordering the strip ---------- */
+
+/* A tile is draggable exactly when its role is ordered and holds more than one
+   — the same condition its number speaks to. The whole tile is the handle, the
+   way the picture is what the hand reaches for. `touch-action` is what lets a
+   finger drag a tile instead of scrolling the dock away with it, so it is
+   claimed only here, where the gesture is real. */
+.ohf-strip-item[data-reorder] {
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+.ohf-strip-item[data-reorder] .ohf-strip-thumb {
+  -webkit-user-drag: none;
+}
+.ohf-strip-item[data-lifted] {
+  cursor: grabbing;
+  z-index: 2;
+}
+/* The picture lifts off the strip; the controls on its corners stay where the
+   pointer left them, so the tile in the hand is unmistakable. */
+.ohf-strip-item[data-lifted] .ohf-strip-tile {
+  transform: scale(1.08);
+  box-shadow:
+    inset 0 0 0 1px var(--accent-32),
+    var(--shadow-2);
+}
+/* The grip is that handle in visible form: the pointer drags from it, and the
+   keyboard lifts the tile with it. Like the gallery's card actions it comes out
+   of hiding on hover — and on its own focus, so tabbing still reaches it. */
+.ohf-strip-grip {
+  position: absolute;
+  top: -6px;
+  left: -6px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--tx3);
+  background: var(--s4);
+  box-shadow:
+    0 1px 4px rgba(0, 0, 0, 0.55),
+    inset 0 0 0 1px var(--line-2);
+  opacity: 0;
+  cursor: grab;
+  touch-action: none;
+  transition:
+    opacity 0.15s ease,
+    color 0.15s ease,
+    background 0.15s ease,
+    transform 0.15s var(--ease);
+}
+.ohf-strip-item:hover .ohf-strip-grip,
+.ohf-strip-item:has(.ohf-strip-grip:focus-visible) .ohf-strip-grip,
+.ohf-strip-item[data-lifted] .ohf-strip-grip {
+  opacity: 1;
+}
+.ohf-strip-grip:hover {
+  color: var(--tx);
+  background: var(--s3);
+}
+.ohf-strip-grip:active {
+  cursor: grabbing;
+  transform: scale(0.96);
+}
+/* No hover to reveal it with, so the handle simply stands — and larger, because
+   a thumb is not a cursor. */
+@media (hover: none) {
+  .ohf-strip-grip {
+    opacity: 1;
+    width: 26px;
+    height: 26px;
+  }
 }
 
 /* The dock floats over the runs the way the top bar does. In flow it reserved

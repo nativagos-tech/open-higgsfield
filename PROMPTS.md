@@ -260,8 +260,9 @@ suit le gabarit générique tel quel.
   `@Audio1…@Audio3` **accrochés à un nom** (« the hiker from @Image1 ») et
   assigner un rôle à chaque référence (« @Video1 for camera movement only »)
   [COM, évite le « bleeding »]. Dans l'app, l'index suit l'ordre des médias
-  dans le plateau (références, puis clips, puis audios) — à vérifier sur un
-  premier essai.
+  dans le plateau (références, puis clips, puis audios), chaque vignette portant
+  son numéro ; cet ordre se règle en faisant glisser les vignettes les unes par
+  rapport aux autres — à vérifier sur un premier essai.
 - **Multi-plans** [OFF] : étiquettes `Shot 1:`, `Shot 2:`, `Closing:` ; **pas**
   de plages de secondes (« 0–5s: ») qui produisent des sorties anormales
   [OFF, guide dialogue]. Le mot `cut to` est compris.
